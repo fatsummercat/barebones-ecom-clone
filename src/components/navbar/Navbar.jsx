@@ -1,12 +1,42 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import "./Navbar.css";
 import user_icon from "../assets/user_icon.png";
 import cart_icon from "../assets/cart_icon.png";
 import { Link } from "react-router-dom";
 import { ShopContext } from "../../context/ShopContext";
+import axios from "axios";
 
 const Navbar = () => {
-  const { menu, setMenu, getTotalItems } = useContext(ShopContext);
+  const [cartAmount, setCartAmount] = useState("");
+  const { menu, setMenu } = useContext(ShopContext);
+
+  useEffect(() => {
+    const getCarts = async () => {
+      try {
+        const authToken = document.cookie
+          .split("; ")
+          .find(row => row.startsWith("__auth="))
+          .split("=")[1];
+
+        const config = {
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded;charset=utf-8",
+            Authorization: `Bearer ${authToken}`,
+          },
+        };
+        const response = await axios.get(
+          "https://cn334-api.future-fdn.tech/api/v1/carts",
+          config
+        );
+
+        setCartAmount(response.data.carts.length);
+      } catch (error) {
+        console.error("Error fetching products: ", error);
+      }
+    };
+
+    getCarts();
+  }, []);
 
   return (
     <div className="navbar">
@@ -106,7 +136,7 @@ const Navbar = () => {
             className="nav-cart-icon"
           />
         </Link>
-        <div className="nav-cart-count">{getTotalItems()}</div>
+        {/* <div className="nav-cart-count">{cartAmount}</div> */}
       </div>
     </div>
   );
