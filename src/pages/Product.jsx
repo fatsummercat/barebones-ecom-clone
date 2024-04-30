@@ -12,7 +12,7 @@ const Product = () => {
     const getProduct = async () => {
       try {
         const response = await axios.get(
-          `http://cn334-api.japaneast.cloudapp.azure.com/api/v1/products/${productId}`
+          `https://cn334-api.future-fdn.tech/api/v1/products/${productId}`
         );
         setProduct(response.data);
       } catch (error) {

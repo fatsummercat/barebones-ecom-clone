@@ -14,7 +14,7 @@ const Category = props => {
     const getProductCategory = async () => {
       try {
         const response = await axios.get(
-          `http://cn334-api.japaneast.cloudapp.azure.com/api/v1/products?category=${categoryPath}`
+          `https://cn334-api.future-fdn.tech/api/v1/products?category=${categoryPath}`
         );
         setProducts(response.data.products);
       } catch (error) {

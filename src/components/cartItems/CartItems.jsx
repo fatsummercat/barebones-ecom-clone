@@ -23,7 +23,7 @@ const CartItems = () => {
           },
         };
         const response = await axios.get(
-          "http://cn334-api.japaneast.cloudapp.azure.com/api/v1/carts",
+          "https://cn334-api.future-fdn.tech/api/v1/carts",
           config
         );
 
@@ -44,7 +44,7 @@ const CartItems = () => {
         const productDetails = await Promise.all(
           productIds.map(async productId => {
             const productResponse = await axios.get(
-              `http://cn334-api.japaneast.cloudapp.azure.com/api/v1/products/${productId}`
+              `https://cn334-api.future-fdn.tech/api/v1/products/${productId}`
             );
             return productResponse.data;
           })
@@ -73,13 +73,39 @@ const CartItems = () => {
       };
 
       await axios.delete(
-        `http://cn334-api.japaneast.cloudapp.azure.com/api/v1/carts/${productId}`,
+        `https://cn334-api.future-fdn.tech/api/v1/carts/${productId}`,
         config
       );
 
       setCart(cart.filter(item => item.product_id !== productId));
     } catch (error) {
       console.error("Error removing product from cart: ", error);
+    }
+  };
+
+  const checkout = async () => {
+    if (cart.length === 0) return;
+    try {
+      const authToken = document.cookie
+        .split("; ")
+        .find(row => row.startsWith("__auth="))
+        .split("=")[1];
+
+      const config = {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+        },
+      };
+
+      await axios.delete(
+        "https://cn334-api.future-fdn.tech/api/v1/carts",
+        config
+      );
+
+      setCart([]);
+      console.log("Thank you");
+    } catch (error) {
+      console.error("Error during checkout: ", error);
     }
   };
 
@@ -153,12 +179,14 @@ const CartItems = () => {
               <h3>${getTotalAmount()}</h3>
             </div>
           </div>
-          <Link
-            to="/thank-you"
-            style={{ textDecoration: "none", color: "inherit" }}
-          >
-            <button>Checkout</button>
-          </Link>
+          {cart.length > 0 && (
+            <Link
+              to="/thank-you"
+              style={{ textDecoration: "none", color: "inherit" }}
+            >
+              <button onClick={() => checkout()}>Checkout</button>
+            </Link>
+          )}
         </div>
       </div>
     </div>

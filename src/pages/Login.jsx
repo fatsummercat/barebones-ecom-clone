@@ -11,7 +11,7 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const BASE_API_URL = "http://cn334-api.japaneast.cloudapp.azure.com/api/v1";
+  const BASE_API_URL = "https://cn334-api.future-fdn.tech/api/v1";
 
   const signIn = useSignIn();
 

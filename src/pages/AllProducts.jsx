@@ -10,7 +10,7 @@ const AllProducts = props => {
     const getAllProducts = async () => {
       try {
         const response = await axios.get(
-          "http://cn334-api.japaneast.cloudapp.azure.com/api/v1/products"
+          "https://cn334-api.future-fdn.tech/api/v1/products"
         );
         setProducts(response.data.products);
       } catch (error) {

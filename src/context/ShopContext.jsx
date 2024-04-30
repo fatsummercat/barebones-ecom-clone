@@ -7,7 +7,7 @@ export const ShopContext = createContext(null);
 const getProducts = async (category = "") => {
   try {
     const response = await axios.get(
-      `http://cn334-api.japaneast.cloudapp.azure.com/api/v1/products?category=${
+      `https://cn334-api.future-fdn.tech/api/v1/products?category=${
         category || ""
       }`
     );

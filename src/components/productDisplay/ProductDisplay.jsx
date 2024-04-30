@@ -25,7 +25,7 @@ const ProductDisplay = props => {
         },
       };
       await axios.post(
-        "http://cn334-api.japaneast.cloudapp.azure.com/api/v1/carts",
+        "https://cn334-api.future-fdn.tech/api/v1/carts",
         params,
         config
       );
