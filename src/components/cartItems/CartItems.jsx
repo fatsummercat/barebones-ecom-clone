@@ -59,9 +59,41 @@ const CartItems = () => {
     fetchProductDetails();
   }, [cart]);
 
-  // const removeFromCart = () => {
+  const removeFromCart = async productId => {
+    try {
+      const authToken = document.cookie
+        .split("; ")
+        .find(row => row.startsWith("__auth="))
+        .split("=")[1];
 
-  // }
+      const config = {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+        },
+      };
+
+      await axios.delete(
+        `http://cn334-api.japaneast.cloudapp.azure.com/api/v1/carts/${productId}`,
+        config
+      );
+
+      setCart(cart.filter(item => item.product_id !== productId));
+    } catch (error) {
+      console.error("Error removing product from cart: ", error);
+    }
+  };
+
+  const getTotalAmount = () => {
+    let total = 0;
+    products.forEach(product => {
+      const quantityObj = cart.find(
+        cartItem => cartItem.product_id === product.product_id
+      );
+      const quantity = quantityObj ? quantityObj.quantity : 1;
+      total += product.discounted_price * quantity;
+    });
+    return total.toFixed(2);
+  };
 
   return (
     <div className="cart-items">
@@ -76,7 +108,7 @@ const CartItems = () => {
       <hr />
       {products.map((product, i) => {
         const quantityObj = cart.find(
-          cartItem => cartItem.product_id === product.product_id
+          cartItem => cartItem.product_id === product.id
         );
         const quantity = quantityObj ? quantityObj.quantity : 1;
         return (
@@ -95,7 +127,7 @@ const CartItems = () => {
                 className="cart-items-remove-icon"
                 src={cross_icon}
                 alt=""
-                // onClick={() => removeFromCart()}
+                onClick={() => removeFromCart(product.id)}
               />
             </div>
             <hr />
@@ -108,7 +140,7 @@ const CartItems = () => {
           <div>
             <div className="cart-items-total-item">
               <p>Subtotal</p>
-              <p>${0}</p>
+              <p>${getTotalAmount()}</p>
             </div>
             <hr />
             <div className="cart-items-total-item">
@@ -118,7 +150,7 @@ const CartItems = () => {
             <hr />
             <div className="cart-items-total-item">
               <h3>Total</h3>
-              <h3>${0}</h3>
+              <h3>${getTotalAmount()}</h3>
             </div>
           </div>
           <Link
